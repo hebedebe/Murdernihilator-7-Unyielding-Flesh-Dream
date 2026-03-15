@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bcvq8duyqbfwm"]
+
+[ext_resource type="Script" uid="uid://dxwlln8025dfy" path="res://Actors/Player/Scripts/player.gd" id="1_v1key"]
+[ext_resource type="Script" uid="uid://ogke4tceyk7h" path="res://Components/HealthComponent/health_component.gd" id="1_vhr1b"]
+[ext_resource type="Script" uid="uid://bkneh17a21syg" path="res://Components/InputComponent/input_component.gd" id="2_5ni5v"]
+[ext_resource type="Script" uid="uid://t4s3ngqk0pbd" path="res://Components/MovementComponent/movement_component.gd" id="4_b63gh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vhr1b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhr1b"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vhr1b"]
+material = SubResource("StandardMaterial3D_vhr1b")
+size = Vector3(0.565, 0.095, 0.625)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_q8mi5"]
+
+[node name="Player" type="CharacterBody3D" unique_id=85920957]
+script = ExtResource("1_v1key")
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="." unique_id=1110855117]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_vhr1b")
+
+[node name="EyeMesh" type="MeshInstance3D" parent="PlayerMesh" unique_id=653130255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.615, -0.21891785)
+mesh = SubResource("BoxMesh_vhr1b")
+
+[node name="PlayerCollider" type="CollisionShape3D" parent="." unique_id=228833280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_q8mi5")
+
+[node name="Neck" type="Node3D" parent="." unique_id=1618529689]
+
+[node name="Camera3D" type="Camera3D" parent="Neck" unique_id=1404921878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6252489, 0)
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1073257920]
+unique_name_in_owner = true
+script = ExtResource("1_vhr1b")
+metadata/_custom_type_script = "uid://ogke4tceyk7h"
+
+[node name="InputComponent" type="Node" parent="." unique_id=1146682006]
+unique_name_in_owner = true
+script = ExtResource("2_5ni5v")
+metadata/_custom_type_script = "uid://bkneh17a21syg"
+
+[node name="MovementComponent" type="Node" parent="." unique_id=1308062132 node_paths=PackedStringArray("body", "model")]
+unique_name_in_owner = true
+script = ExtResource("4_b63gh")
+body = NodePath("..")
+model = NodePath("../PlayerMesh")
+metadata/_custom_type_script = "uid://t4s3ngqk0pbd"
