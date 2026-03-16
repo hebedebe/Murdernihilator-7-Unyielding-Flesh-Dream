@@ -47,16 +47,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck" unique_id=1404921878]
 
-[node name="VelocityComponent" type="Node" parent="." unique_id=703024950 node_paths=PackedStringArray("bodies_to_update")]
+[node name="VelocityComponent" type="Node" parent="." unique_id=703024950 node_paths=PackedStringArray("target_node")]
 unique_name_in_owner = true
 script = ExtResource("6_isd1h")
-bodies_to_update = [NodePath("..")]
+target_node = NodePath("..")
 metadata/_custom_type_script = "uid://cku1vco2vkbfg"
 
-[node name="KnockbackComponent" type="Node" parent="." unique_id=1977639424 node_paths=PackedStringArray("velocity_target")]
+[node name="KnockbackComponent" type="Node" parent="." unique_id=1977639424 node_paths=PackedStringArray("velocity_component")]
 unique_name_in_owner = true
 script = ExtResource("7_8gtf5")
-velocity_target = NodePath("..")
+velocity_component = NodePath("../VelocityComponent")
 metadata/_custom_type_script = "uid://crubfkko2d2yu"
 
 [node name="LookComponent" type="Node" parent="." unique_id=1285239160 node_paths=PackedStringArray("body", "neck")]

@@ -32,8 +32,6 @@ func _physics_process(delta: float) -> void:
 	velocity_component.velocity.z = wish_dir.z * speed
 	
 	body.move_and_slide()
-	velocity_component.velocity = body.get_real_velocity();
-
 
 #region Signal targets
 func on_move_direction_changed(direction: Vector2) -> void:

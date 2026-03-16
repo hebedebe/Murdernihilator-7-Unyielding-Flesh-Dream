@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dame871bpsowo"]
 
 [ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="1_4wjmn"]
+[ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="2_rui4n"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vvw3x"]
 
@@ -17,10 +18,17 @@ shape = SubResource("CapsuleShape3D_vvw3x")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=609162574]
 mesh = SubResource("CapsuleMesh_vvw3x")
 
-[node name="KnockbackComponent" type="Node" parent="." unique_id=1905260633 node_paths=PackedStringArray("velocity_target")]
+[node name="VelocityComponent" type="Node" parent="." unique_id=1670202428 node_paths=PackedStringArray("target_node")]
+unique_name_in_owner = true
+script = ExtResource("2_rui4n")
+target_node = NodePath("..")
+target_variable = "linear_velocity"
+metadata/_custom_type_script = "uid://cku1vco2vkbfg"
+
+[node name="KnockbackComponent" type="Node" parent="." unique_id=1905260633 node_paths=PackedStringArray("velocity_component")]
 unique_name_in_owner = true
 script = ExtResource("1_4wjmn")
-velocity_target = NodePath("..")
+velocity_component = NodePath("../VelocityComponent")
 metadata/_custom_type_script = "uid://crubfkko2d2yu"
 
 [connection signal="body_entered" from="." to="KnockbackComponent" method="force_based_knockback"]
