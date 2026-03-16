@@ -2,6 +2,7 @@ class_name MeleeComponent extends Node
 
 signal attacked
 signal attack_landed
+signal attack_missed
 
 @export_category("Links")
 @export var melee_area: Area3D
@@ -34,5 +35,7 @@ func attack() -> void:
 	attacked.emit()
 	if did_attack_hit:
 		attack_landed.emit()
+	else:
+		attack_missed.emit()
 			
 #endregion

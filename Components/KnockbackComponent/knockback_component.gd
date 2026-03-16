@@ -1,6 +1,7 @@
 class_name KnockbackComponent extends Node
 
 signal knocked_back(strength: float, direction: Basis)
+signal knocked_back_no_args
 
 @export_category("Links")
 @export var velocity_target: Node
@@ -12,4 +13,4 @@ func knockback(strength: float, direction: Basis) -> void:
 	elif "linear_velocity" in velocity_target:
 		velocity_target.linear_velocity += impulse
 	knocked_back.emit(strength, direction)
-	
+	knocked_back_no_args.emit()

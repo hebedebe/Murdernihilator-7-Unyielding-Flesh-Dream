@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b0jocf00cv2ky"]
 
 [ext_resource type="PackedScene" uid="uid://bcvq8duyqbfwm" path="res://Actors/Player/player.tscn" id="1_s4e7g"]
+[ext_resource type="PackedScene" uid="uid://dame871bpsowo" path="res://Actors/Dummy/dummy.tscn" id="2_i278h"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s4e7g"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -27,7 +28,19 @@ environment = SubResource("Environment_ssabd")
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1608129016]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27856445, 0)
 use_collision = true
-size = Vector3(10, 0.443, 10)
+size = Vector3(20, 0.5, 20)
 
 [node name="Player" parent="." unique_id=85920957 instance=ExtResource("1_s4e7g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37729895, 1.1920929e-07, 0.22959614)
+
+[node name="Dummy" parent="." unique_id=1148793133 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4799721, -0.057064533, -2.5599704)
+
+[node name="Dummy2" parent="." unique_id=1191317912 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9038925, -0.02856493, -6.1011906)
+
+[node name="Dummy3" parent="." unique_id=339196454 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4091253, -0.02856493, -5.803854)
+
+[node name="Dummy4" parent="." unique_id=1102449950 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2067735, -0.02856493, -5.9473743)
