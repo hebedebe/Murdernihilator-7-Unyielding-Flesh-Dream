@@ -1,36 +1,32 @@
 class_name HealthComponent extends Node
 
-signal health_updated(new_health)
-signal health_decreased(amount)
-signal health_increased(amount)
-signal damaged(amount)
-signal healed(amount)
+signal health_changed(new_health: float, delta: float)
 signal died
-signal health_reset
+signal revived
 
-@export var max_health: float = 100
-@export var health: float = 100:
-	set(new_health):
-		if new_health > health:
-			health_increased.emit(new_health-health)
-		elif new_health < health:
-			health_decreased.emit(health-new_health)
-		health = new_health
-		health_updated.emit(new_health)
-		if health <= 0:
+@export var max_health: float = 100.0
+
+var health: float = max_health:
+	set(value):
+		var clamped := clampf(value, 0.0, max_health)
+		var delta := clamped - health
+		if delta == 0.0:
+			return
+		health = clamped
+		health_changed.emit(health, delta)
+		if health <= 0.0 and is_alive:
 			is_alive = false
 			died.emit()
-			
-@export var is_alive: bool = true
 
-func damage(amount: float):
+var is_alive: bool = true
+
+func damage(amount: float) -> void:
 	health -= amount
-	damaged.emit(amount)
 
-func heal(amount: float):
+func heal(amount: float) -> void:
 	health += amount
-	healed.emit(amount)
 
-func reset():
-	health = max_health
-	health_reset.emit()
+func reset() -> void:
+	is_alive = true
+	health = max_health   # setter fires health_changed
+	revived.emit()

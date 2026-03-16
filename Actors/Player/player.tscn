@@ -4,6 +4,11 @@
 [ext_resource type="Script" uid="uid://ogke4tceyk7h" path="res://Components/HealthComponent/health_component.gd" id="1_vhr1b"]
 [ext_resource type="Script" uid="uid://bkneh17a21syg" path="res://Components/InputComponent/input_component.gd" id="2_5ni5v"]
 [ext_resource type="Script" uid="uid://t4s3ngqk0pbd" path="res://Components/MovementComponent/movement_component.gd" id="4_b63gh"]
+[ext_resource type="Script" uid="uid://dkyqu0lchg05q" path="res://Components/HitstopComponent/hitstop_component.gd" id="5_n7l8t"]
+[ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="6_isd1h"]
+[ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="7_8gtf5"]
+[ext_resource type="Script" uid="uid://dgdrhakp1liet" path="res://Components/LookComponent/look_component.gd" id="8_awv0x"]
+[ext_resource type="Script" uid="uid://bfu8ya1536p7k" path="res://Components/MeleeComponent/melee_component.gd" id="9_pnakb"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vhr1b"]
 
@@ -15,6 +20,9 @@ material = SubResource("StandardMaterial3D_vhr1b")
 size = Vector3(0.565, 0.095, 0.625)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_q8mi5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pnakb"]
+size = Vector3(1, 1.63, 1)
 
 [node name="Player" type="CharacterBody3D" unique_id=85920957]
 script = ExtResource("1_v1key")
@@ -33,23 +41,68 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_q8mi5")
 
 [node name="Neck" type="Node3D" parent="." unique_id=1618529689]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck" unique_id=1404921878]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6252489, 0)
 
-[node name="HealthComponent" type="Node" parent="." unique_id=1073257920]
+[node name="HitstopComponent" type="Node" parent="." unique_id=521752760]
+unique_name_in_owner = true
+script = ExtResource("5_n7l8t")
+metadata/_custom_type_script = "uid://dkyqu0lchg05q"
+
+[node name="VelocityComponent" type="Node" parent="." unique_id=703024950 node_paths=PackedStringArray("bodies_to_update")]
+unique_name_in_owner = true
+script = ExtResource("6_isd1h")
+bodies_to_update = [NodePath("..")]
+metadata/_custom_type_script = "uid://cku1vco2vkbfg"
+
+[node name="KnockbackComponent" type="Node" parent="." unique_id=1977639424 node_paths=PackedStringArray("velocity_target")]
+unique_name_in_owner = true
+script = ExtResource("7_8gtf5")
+velocity_target = NodePath("..")
+metadata/_custom_type_script = "uid://crubfkko2d2yu"
+
+[node name="LookComponent" type="Node" parent="." unique_id=1285239160 node_paths=PackedStringArray("body", "neck")]
+unique_name_in_owner = true
+script = ExtResource("8_awv0x")
+body = NodePath("..")
+neck = NodePath("../Neck")
+metadata/_custom_type_script = "uid://dgdrhakp1liet"
+
+[node name="MovementComponent" type="Node" parent="." unique_id=1701396071 node_paths=PackedStringArray("body", "velocity_component")]
+unique_name_in_owner = true
+script = ExtResource("4_b63gh")
+body = NodePath("..")
+velocity_component = NodePath("../VelocityComponent")
+metadata/_custom_type_script = "uid://t4s3ngqk0pbd"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=1330118116]
 unique_name_in_owner = true
 script = ExtResource("1_vhr1b")
 metadata/_custom_type_script = "uid://ogke4tceyk7h"
 
-[node name="InputComponent" type="Node" parent="." unique_id=1146682006]
+[node name="InputComponent" type="Node" parent="." unique_id=502195633]
 unique_name_in_owner = true
 script = ExtResource("2_5ni5v")
 metadata/_custom_type_script = "uid://bkneh17a21syg"
 
-[node name="MovementComponent" type="Node" parent="." unique_id=1308062132 node_paths=PackedStringArray("body", "model")]
+[node name="MeleeComponent" type="Node" parent="." unique_id=177339956 node_paths=PackedStringArray("melee_area", "knockback_direction_pointer", "ignored_bodies")]
 unique_name_in_owner = true
-script = ExtResource("4_b63gh")
-body = NodePath("..")
-model = NodePath("../PlayerMesh")
-metadata/_custom_type_script = "uid://t4s3ngqk0pbd"
+script = ExtResource("9_pnakb")
+melee_area = NodePath("../KickArea")
+knockback_direction_pointer = NodePath("..")
+damage = 10.0
+knockback = 30.0
+ignored_bodies = [NodePath("..")]
+metadata/_custom_type_script = "uid://bfu8ya1536p7k"
+
+[node name="KickArea" type="Area3D" parent="." unique_id=1619331825]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KickArea" unique_id=1643599495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.6125858)
+shape = SubResource("BoxShape3D_pnakb")
+
+[connection signal="jump_requested" from="InputComponent" to="MovementComponent" method="on_jump_requested"]
+[connection signal="kick_requested" from="InputComponent" to="MeleeComponent" method="attack"]
+[connection signal="look_input" from="InputComponent" to="LookComponent" method="on_look_input"]
+[connection signal="move_direction_changed" from="InputComponent" to="MovementComponent" method="on_move_direction_changed"]
