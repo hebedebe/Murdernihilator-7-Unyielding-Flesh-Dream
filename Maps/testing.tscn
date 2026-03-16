@@ -44,3 +44,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4091253, -0.02856493, -5.8
 
 [node name="Dummy4" parent="." unique_id=1102449950 instance=ExtResource("2_i278h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2067735, -0.02856493, -5.9473743)
+
+[node name="Dummy5" parent="." unique_id=1453271924 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.44176, -0.028564453, -8.410712)
+
+[node name="Dummy6" parent="." unique_id=887658738 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35143447, -0.02856493, -8.017728)
+
+[node name="Dummy7" parent="." unique_id=823963266 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.088053, -0.028564453, -8.066359)

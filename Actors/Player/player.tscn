@@ -23,7 +23,7 @@ size = Vector3(0.565, 0.095, 0.625)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_q8mi5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pnakb"]
-size = Vector3(1, 1.63, 1)
+size = Vector3(1, 1.63, 1.5698242)
 
 [node name="Player" type="CharacterBody3D" unique_id=85920957]
 script = ExtResource("1_v1key")
@@ -103,7 +103,7 @@ volume_db = -12.772
 [node name="KickArea" type="Area3D" parent="." unique_id=1619331825]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KickArea" unique_id=1643599495]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.6125858)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.8974979)
 shape = SubResource("BoxShape3D_pnakb")
 
 [connection signal="jump_requested" from="InputComponent" to="MovementComponent" method="on_jump_requested"]
