@@ -200,7 +200,7 @@ metadata/_custom_type_script = "uid://dkyqu0lchg05q"
 unique_name_in_owner = true
 script = ExtResource("12_w553y")
 velocity_component = NodePath("../VelocityComponent")
-drag = Vector3(20, 0, 20)
+drag = Vector3(20, 1, 20)
 metadata/_custom_type_script = "uid://ueemsl00luuh"
 
 [node name="JumpComponent" type="Node" parent="." unique_id=351742189 node_paths=PackedStringArray("velocity_component", "body")]

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://i75445ccm3pe"]
+
+[ext_resource type="Texture2D" uid="uid://bsxqtrp7vrmem" path="res://Textures/Spatial/tiles.png" id="1_xfj66"]
+
+[resource]
+albedo_texture = ExtResource("1_xfj66")
+uv1_triplanar = true
+texture_filter = 0

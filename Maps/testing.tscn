@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://b0jocf00cv2ky"]
 
+[ext_resource type="Material" uid="uid://b65ox4e561f3o" path="res://Materials/Spatial/tiles.tres" id="1_qypf0"]
 [ext_resource type="PackedScene" uid="uid://bcvq8duyqbfwm" path="res://Actors/Player/player.tscn" id="1_s4e7g"]
 [ext_resource type="Material" uid="uid://bufmq77y7r76p" path="res://Materials/Spatial/Fluids/goo.tres" id="1_ssabd"]
 [ext_resource type="PackedScene" uid="uid://dame871bpsowo" path="res://Actors/Dummy/dummy.tscn" id="2_i278h"]
+[ext_resource type="Script" uid="uid://b0bud44dkd53e" path="res://Components/ExecuteOnAreaContentsComponent/execute_on_area_contents_component.gd" id="3_8n7cj"]
+[ext_resource type="Script" uid="uid://if3cjb2cpbnu" path="res://Components/ApplyForceComponent/apply_force_component.gd" id="4_f0ito"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s4e7g"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -14,20 +17,23 @@ sky_material = SubResource("ProceduralSkyMaterial_s4e7g")
 [sub_resource type="Environment" id="Environment_ssabd"]
 background_mode = 2
 sky = SubResource("Sky_i278h")
+tonemap_mode = 3
 ssao_enabled = true
 glow_enabled = true
 fog_enabled = true
 fog_mode = 1
-fog_light_color = Color(0.5176471, 0.78431374, 0.6313726, 1)
+fog_light_color = Color(0.5176471, 0.78431374, 0, 1)
 fog_density = 1.0
-volumetric_fog_density = 0.0
-volumetric_fog_emission = Color(0, 0.60784316, 0, 1)
+fog_depth_begin = 0.0
+adjustment_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8n7cj"]
+size = Vector3(100, 76.361, 100)
 
 [node name="Testing" type="Node3D" unique_id=531413514]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=64211751]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
-shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=272230281]
 environment = SubResource("Environment_ssabd")
@@ -36,11 +42,28 @@ environment = SubResource("Environment_ssabd")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27856445, 0)
 use_collision = true
 size = Vector3(20, 0.5, 20)
+material = ExtResource("1_qypf0")
 
 [node name="Fluid" type="CSGBox3D" parent="." unique_id=113405963]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.59702206, 0)
-size = Vector3(100, 0.5, 100)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -38.527443, 0)
+size = Vector3(100, 76.36084, 100)
 material = ExtResource("1_ssabd")
+
+[node name="ExecuteOnAreaContentsComponent" type="Node" parent="Fluid" unique_id=2115708856 node_paths=PackedStringArray("area_3d")]
+script = ExtResource("3_8n7cj")
+area_3d = NodePath("../Area3D")
+metadata/_custom_type_script = "uid://b0bud44dkd53e"
+
+[node name="ApplyForceComponent" type="Node" parent="Fluid" unique_id=1368052140]
+script = ExtResource("4_f0ito")
+force = Vector3(0, 12, 0)
+metadata/_custom_type_script = "uid://if3cjb2cpbnu"
+
+[node name="Area3D" type="Area3D" parent="Fluid" unique_id=251003561]
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Fluid/Area3D" unique_id=445519656]
+shape = SubResource("BoxShape3D_8n7cj")
 
 [node name="Player" parent="." unique_id=85920957 instance=ExtResource("1_s4e7g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37729895, 1.1920929e-07, 0.22959614)
@@ -65,3 +88,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35143447, -0.02856493, -8.0
 
 [node name="Dummy7" parent="." unique_id=823963266 instance=ExtResource("2_i278h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.088053, -0.028564453, -8.066359)
+
+[connection signal="overlapping_body_tick" from="Fluid/ExecuteOnAreaContentsComponent" to="Fluid/ApplyForceComponent" method="apply"]
