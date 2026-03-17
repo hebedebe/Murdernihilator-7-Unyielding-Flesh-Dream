@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://bfu8ya1536p7k" path="res://Components/MeleeComponent/melee_component.gd" id="9_pnakb"]
 [ext_resource type="AudioStream" uid="uid://ceyfsoc84q7ml" path="res://Sounds/FX/kick_landed.mp3" id="10_g1lo4"]
 [ext_resource type="AudioStream" uid="uid://cogj3y1t6ncpb" path="res://Sounds/FX/whiff.mp3" id="11_sciwa"]
+[ext_resource type="Script" uid="uid://gbk2vvaygyhp" path="res://Components/ValueDisplayComponent/value_display_component.gd" id="11_w553y"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vhr1b"]
 
@@ -24,6 +25,35 @@ size = Vector3(0.565, 0.095, 0.625)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pnakb"]
 size = Vector3(1, 1.63, 1.5698242)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w553y"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45891982, 0.9341796, 0.04371781, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="GDScript" id="GDScript_sciwa"]
+script/source = "extends ValueDisplayComponent
+
+var fps: float:
+	get():
+		return Engine.get_frames_per_second()
+"
 
 [node name="Player" type="CharacterBody3D" unique_id=85920957]
 script = ExtResource("1_v1key")
@@ -46,6 +76,12 @@ shape = SubResource("CapsuleShape3D_q8mi5")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Neck" unique_id=1404921878]
+
+[node name="KickArea" type="Area3D" parent="." unique_id=1619331825]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KickArea" unique_id=1643599495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.8974979)
+shape = SubResource("BoxShape3D_pnakb")
 
 [node name="VelocityComponent" type="Node" parent="." unique_id=703024950 node_paths=PackedStringArray("target_node")]
 unique_name_in_owner = true
@@ -100,12 +136,36 @@ stream = ExtResource("10_g1lo4")
 stream = ExtResource("11_sciwa")
 volume_db = -12.772
 
-[node name="KickArea" type="Area3D" parent="." unique_id=1619331825]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1548788757]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="KickArea" unique_id=1643599495]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.8974979)
-shape = SubResource("BoxShape3D_pnakb")
+[node name="PanelContainer" type="PanelContainer" parent="HUD" unique_id=1568386759]
+offset_left = 22.0
+offset_top = 15.0
+offset_right = 250.0
+offset_bottom = 87.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_w553y")
 
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PanelContainer" unique_id=1498593694]
+layout_mode = 2
+
+[node name="Velocity" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=1904418091 node_paths=PackedStringArray("target_node")]
+layout_mode = 2
+script = ExtResource("11_w553y")
+target_node = NodePath("../../../../VelocityComponent")
+target_value_name = "velocity"
+format = "Velocity: %s"
+update_on_process = false
+metadata/_custom_type_script = "uid://gbk2vvaygyhp"
+
+[node name="FPS" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=27704702 node_paths=PackedStringArray("target_node")]
+layout_mode = 2
+script = SubResource("GDScript_sciwa")
+target_node = NodePath(".")
+target_value_name = "fps"
+format = "Fps: %s"
+metadata/_custom_type_script = "uid://gbk2vvaygyhp"
+
+[connection signal="velocity_updated" from="VelocityComponent" to="HUD/PanelContainer/VBoxContainer/Velocity" method="update" unbinds=1]
 [connection signal="jump_requested" from="InputComponent" to="MovementComponent" method="on_jump_requested"]
 [connection signal="kick_requested" from="InputComponent" to="MeleeComponent" method="attack"]
 [connection signal="look_input" from="InputComponent" to="LookComponent" method="on_look_input"]

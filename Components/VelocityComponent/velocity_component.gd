@@ -12,7 +12,6 @@ var velocity: Vector3:
 		velocity_updated.emit(new_velocity)
 	get():
 		var new_vel = target_node.get(target_variable)
-		velocity = new_vel
 		return new_vel
 
 func _ready() -> void:
