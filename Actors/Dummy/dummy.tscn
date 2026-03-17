@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://dame871bpsowo"]
 
 [ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="1_4wjmn"]
+[ext_resource type="Material" uid="uid://50ntbonbl5mg" path="res://Materials/Spatial/dummy.tres" id="1_tyhmb"]
 [ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="2_rui4n"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vvw3x"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vvw3x"]
+material = ExtResource("1_tyhmb")
 
 [node name="Dummy" type="RigidBody3D" unique_id=1148793133]
 contact_monitor = true

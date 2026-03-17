@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b0jocf00cv2ky"]
 
 [ext_resource type="PackedScene" uid="uid://bcvq8duyqbfwm" path="res://Actors/Player/player.tscn" id="1_s4e7g"]
+[ext_resource type="Material" uid="uid://bufmq77y7r76p" path="res://Materials/Spatial/Fluids/goo.tres" id="1_ssabd"]
 [ext_resource type="PackedScene" uid="uid://dame871bpsowo" path="res://Actors/Dummy/dummy.tscn" id="2_i278h"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s4e7g"]
@@ -13,8 +14,14 @@ sky_material = SubResource("ProceduralSkyMaterial_s4e7g")
 [sub_resource type="Environment" id="Environment_ssabd"]
 background_mode = 2
 sky = SubResource("Sky_i278h")
-tonemap_mode = 2
+ssao_enabled = true
 glow_enabled = true
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.5176471, 0.78431374, 0.6313726, 1)
+fog_density = 1.0
+volumetric_fog_density = 0.0
+volumetric_fog_emission = Color(0, 0.60784316, 0, 1)
 
 [node name="Testing" type="Node3D" unique_id=531413514]
 
@@ -25,10 +32,15 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=272230281]
 environment = SubResource("Environment_ssabd")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1608129016]
+[node name="Platform" type="CSGBox3D" parent="." unique_id=1608129016]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.27856445, 0)
 use_collision = true
 size = Vector3(20, 0.5, 20)
+
+[node name="Fluid" type="CSGBox3D" parent="." unique_id=113405963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.59702206, 0)
+size = Vector3(100, 0.5, 100)
+material = ExtResource("1_ssabd")
 
 [node name="Player" parent="." unique_id=85920957 instance=ExtResource("1_s4e7g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.37729895, 1.1920929e-07, 0.22959614)

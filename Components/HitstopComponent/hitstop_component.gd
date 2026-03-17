@@ -6,7 +6,6 @@ signal hitstop_ended
 @export var delay: float = 0.02
 @export var duration: float = 0.2
 
-
 #region Signal targets
 func hitstop():
 	hitstop_started.emit()
