@@ -11,6 +11,9 @@
 [ext_resource type="AudioStream" uid="uid://ceyfsoc84q7ml" path="res://Sounds/FX/kick_landed.mp3" id="10_g1lo4"]
 [ext_resource type="AudioStream" uid="uid://cogj3y1t6ncpb" path="res://Sounds/FX/whiff.mp3" id="11_sciwa"]
 [ext_resource type="Script" uid="uid://gbk2vvaygyhp" path="res://Components/ValueDisplayComponent/value_display_component.gd" id="11_w553y"]
+[ext_resource type="Script" uid="uid://ueemsl00luuh" path="res://Components/DragComponent/drag_component.gd" id="12_w553y"]
+[ext_resource type="Script" uid="uid://brac14pbjcc15" path="res://Components/JumpComponent/jump_component.gd" id="13_wmrsf"]
+[ext_resource type="Script" uid="uid://dqjkgj3xl7wa6" path="res://Components/GravityComponent/gravity_component.gd" id="14_h1i6w"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vhr1b"]
 
@@ -83,6 +86,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0461066, -0.8974979)
 shape = SubResource("BoxShape3D_pnakb")
 
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1548788757]
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD" unique_id=1568386759]
+offset_left = 22.0
+offset_top = 15.0
+offset_right = 250.0
+offset_bottom = 87.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_w553y")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PanelContainer" unique_id=1498593694]
+layout_mode = 2
+
+[node name="Velocity" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=1904418091 node_paths=PackedStringArray("target_node")]
+layout_mode = 2
+script = ExtResource("11_w553y")
+target_node = NodePath("../../../../VelocityComponent")
+target_value_name = "velocity"
+format = "Velocity: %s"
+update_on_process = false
+metadata/_custom_type_script = "uid://gbk2vvaygyhp"
+
+[node name="FPS" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=27704702 node_paths=PackedStringArray("target_node")]
+layout_mode = 2
+script = SubResource("GDScript_sciwa")
+target_node = NodePath(".")
+target_value_name = "fps"
+format = "Fps: %s"
+metadata/_custom_type_script = "uid://gbk2vvaygyhp"
+
 [node name="VelocityComponent" type="Node" parent="." unique_id=703024950 node_paths=PackedStringArray("target_node")]
 unique_name_in_owner = true
 script = ExtResource("6_isd1h")
@@ -136,37 +168,30 @@ stream = ExtResource("10_g1lo4")
 stream = ExtResource("11_sciwa")
 volume_db = -12.772
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1548788757]
+[node name="DragComponent" type="Node" parent="." unique_id=2105359549 node_paths=PackedStringArray("velocity_component")]
+unique_name_in_owner = true
+script = ExtResource("12_w553y")
+velocity_component = NodePath("../VelocityComponent")
+drag = Vector3(1, 0, 1)
+drag_scale = 20.0
+metadata/_custom_type_script = "uid://ueemsl00luuh"
 
-[node name="PanelContainer" type="PanelContainer" parent="HUD" unique_id=1568386759]
-offset_left = 22.0
-offset_top = 15.0
-offset_right = 250.0
-offset_bottom = 87.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_w553y")
+[node name="JumpComponent" type="Node" parent="." unique_id=351742189 node_paths=PackedStringArray("velocity_component", "body")]
+unique_name_in_owner = true
+script = ExtResource("13_wmrsf")
+velocity_component = NodePath("../VelocityComponent")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://brac14pbjcc15"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/PanelContainer" unique_id=1498593694]
-layout_mode = 2
-
-[node name="Velocity" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=1904418091 node_paths=PackedStringArray("target_node")]
-layout_mode = 2
-script = ExtResource("11_w553y")
-target_node = NodePath("../../../../VelocityComponent")
-target_value_name = "velocity"
-format = "Velocity: %s"
-update_on_process = false
-metadata/_custom_type_script = "uid://gbk2vvaygyhp"
-
-[node name="FPS" type="Label" parent="HUD/PanelContainer/VBoxContainer" unique_id=27704702 node_paths=PackedStringArray("target_node")]
-layout_mode = 2
-script = SubResource("GDScript_sciwa")
-target_node = NodePath(".")
-target_value_name = "fps"
-format = "Fps: %s"
-metadata/_custom_type_script = "uid://gbk2vvaygyhp"
+[node name="GravityComponent" type="Node" parent="." unique_id=1101253241 node_paths=PackedStringArray("velocity_component")]
+unique_name_in_owner = true
+script = ExtResource("14_h1i6w")
+velocity_component = NodePath("../VelocityComponent")
+gravity_scale = 3.0
+metadata/_custom_type_script = "uid://dqjkgj3xl7wa6"
 
 [connection signal="velocity_updated" from="VelocityComponent" to="HUD/PanelContainer/VBoxContainer/Velocity" method="update" unbinds=1]
-[connection signal="jump_requested" from="InputComponent" to="MovementComponent" method="on_jump_requested"]
+[connection signal="jump_requested" from="InputComponent" to="JumpComponent" method="on_jump_requested"]
 [connection signal="kick_requested" from="InputComponent" to="MeleeComponent" method="attack"]
 [connection signal="look_input" from="InputComponent" to="LookComponent" method="on_look_input"]
 [connection signal="move_direction_changed" from="InputComponent" to="MovementComponent" method="on_move_direction_changed"]
