@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dxwlln8025dfy" path="res://Actors/Player/Scripts/player.gd" id="1_v1key"]
 [ext_resource type="Script" uid="uid://ogke4tceyk7h" path="res://Components/HealthComponent/health_component.gd" id="1_vhr1b"]
 [ext_resource type="Script" uid="uid://bkneh17a21syg" path="res://Components/InputComponent/input_component.gd" id="2_5ni5v"]
+[ext_resource type="Texture2D" uid="uid://bppyvii424qk7" path="res://Textures/UI/Overlays/hitstop_overlay.png" id="3_0y6fc"]
 [ext_resource type="Script" uid="uid://t4s3ngqk0pbd" path="res://Components/MovementComponent/movement_component.gd" id="4_b63gh"]
 [ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="6_isd1h"]
 [ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="7_8gtf5"]
@@ -12,8 +13,10 @@
 [ext_resource type="AudioStream" uid="uid://cogj3y1t6ncpb" path="res://Sounds/FX/whiff.mp3" id="11_sciwa"]
 [ext_resource type="Script" uid="uid://gbk2vvaygyhp" path="res://Components/ValueDisplayComponent/value_display_component.gd" id="11_w553y"]
 [ext_resource type="Script" uid="uid://ueemsl00luuh" path="res://Components/DragComponent/drag_component.gd" id="12_w553y"]
+[ext_resource type="Script" uid="uid://dkyqu0lchg05q" path="res://Components/HitstopComponent/hitstop_component.gd" id="12_woyfc"]
 [ext_resource type="Script" uid="uid://brac14pbjcc15" path="res://Components/JumpComponent/jump_component.gd" id="13_wmrsf"]
 [ext_resource type="Script" uid="uid://dqjkgj3xl7wa6" path="res://Components/GravityComponent/gravity_component.gd" id="14_h1i6w"]
+[ext_resource type="Script" uid="uid://dwwrt2e38os3s" path="res://Components/BodyEventComponent/body_event_component.gd" id="15_nwamd"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_vhr1b"]
 
@@ -88,6 +91,16 @@ shape = SubResource("BoxShape3D_pnakb")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1548788757]
 
+[node name="HitstopOverlay" type="TextureRect" parent="HUD" unique_id=1222756144]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_0y6fc")
+expand_mode = 1
+
 [node name="PanelContainer" type="PanelContainer" parent="HUD" unique_id=1568386759]
 offset_left = 22.0
 offset_top = 15.0
@@ -137,6 +150,7 @@ metadata/_custom_type_script = "uid://dgdrhakp1liet"
 [node name="MovementComponent" type="Node" parent="." unique_id=1701396071 node_paths=PackedStringArray("body", "velocity_component")]
 unique_name_in_owner = true
 script = ExtResource("4_b63gh")
+acceleration = 5.0
 body = NodePath("..")
 velocity_component = NodePath("../VelocityComponent")
 metadata/_custom_type_script = "uid://t4s3ngqk0pbd"
@@ -168,12 +182,16 @@ stream = ExtResource("10_g1lo4")
 stream = ExtResource("11_sciwa")
 volume_db = -12.772
 
+[node name="HitstopComponent" type="Node" parent="MeleeComponent" unique_id=16792172]
+script = ExtResource("12_woyfc")
+duration = 0.075
+metadata/_custom_type_script = "uid://dkyqu0lchg05q"
+
 [node name="DragComponent" type="Node" parent="." unique_id=2105359549 node_paths=PackedStringArray("velocity_component")]
 unique_name_in_owner = true
 script = ExtResource("12_w553y")
 velocity_component = NodePath("../VelocityComponent")
-drag = Vector3(1, 0, 1)
-drag_scale = 20.0
+drag = Vector3(20, 0, 20)
 metadata/_custom_type_script = "uid://ueemsl00luuh"
 
 [node name="JumpComponent" type="Node" parent="." unique_id=351742189 node_paths=PackedStringArray("velocity_component", "body")]
@@ -181,6 +199,7 @@ unique_name_in_owner = true
 script = ExtResource("13_wmrsf")
 velocity_component = NodePath("../VelocityComponent")
 body = NodePath("..")
+air_jumps = 3
 metadata/_custom_type_script = "uid://brac14pbjcc15"
 
 [node name="GravityComponent" type="Node" parent="." unique_id=1101253241 node_paths=PackedStringArray("velocity_component")]
@@ -190,10 +209,22 @@ velocity_component = NodePath("../VelocityComponent")
 gravity_scale = 3.0
 metadata/_custom_type_script = "uid://dqjkgj3xl7wa6"
 
+[node name="BodyEventComponent" type="Node" parent="." unique_id=1279797999 node_paths=PackedStringArray("body")]
+unique_name_in_owner = true
+script = ExtResource("15_nwamd")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://dwwrt2e38os3s"
+
 [connection signal="velocity_updated" from="VelocityComponent" to="HUD/PanelContainer/VBoxContainer/Velocity" method="update" unbinds=1]
 [connection signal="jump_requested" from="InputComponent" to="JumpComponent" method="on_jump_requested"]
 [connection signal="kick_requested" from="InputComponent" to="MeleeComponent" method="attack"]
 [connection signal="look_input" from="InputComponent" to="LookComponent" method="on_look_input"]
 [connection signal="move_direction_changed" from="InputComponent" to="MovementComponent" method="on_move_direction_changed"]
 [connection signal="attack_landed" from="MeleeComponent" to="MeleeComponent/KickLanded" method="play"]
+[connection signal="attack_landed" from="MeleeComponent" to="MeleeComponent/HitstopComponent" method="hitstop"]
 [connection signal="attacked" from="MeleeComponent" to="MeleeComponent/Whiff" method="play"]
+[connection signal="hitstop_ended" from="MeleeComponent/HitstopComponent" to="HUD/HitstopOverlay" method="hide"]
+[connection signal="hitstop_started" from="MeleeComponent/HitstopComponent" to="HUD/HitstopOverlay" method="show"]
+[connection signal="landed" from="BodyEventComponent" to="JumpComponent" method="reset_jumps"]
+[connection signal="landed" from="BodyEventComponent" to="DragComponent" method="set_drag_scale" binds= [1.0]]
+[connection signal="left_floor" from="BodyEventComponent" to="DragComponent" method="set_drag_scale" binds= [0.8]]

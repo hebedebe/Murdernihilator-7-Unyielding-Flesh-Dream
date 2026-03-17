@@ -12,3 +12,11 @@ func _ready() -> void:
 	
 func _physics_process(delta: float) -> void:
 	velocity_component.velocity *= Vector3.ONE - (drag * drag_scale * delta)
+
+#region Signal targets
+func set_drag_scale(new_drag_scale: float) -> void:
+	drag_scale = new_drag_scale
+	
+func set_drag(new_drag: Vector3) -> void:
+	drag = new_drag
+#endregion

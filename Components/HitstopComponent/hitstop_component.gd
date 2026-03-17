@@ -1,6 +1,6 @@
 class_name HitstopComponent extends Node
 
-signal hitstopped
+signal hitstop_started
 signal hitstop_ended
 
 @export var delay: float = 0.02
@@ -9,7 +9,7 @@ signal hitstop_ended
 
 #region Signal targets
 func hitstop():
-	hitstopped.emit()
+	hitstop_started.emit()
 	await get_tree().create_timer(delay, true, false, true).timeout
 	get_tree().paused = true
 	await get_tree().create_timer(duration, true, false, true).timeout

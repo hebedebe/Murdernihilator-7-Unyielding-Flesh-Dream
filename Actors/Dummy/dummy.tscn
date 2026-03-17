@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="1_4wjmn"]
 [ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="2_rui4n"]
-[ext_resource type="Script" uid="uid://creun7xebihdo" path="res://Components/ImpactTriggerComponent/impact_trigger_component.gd" id="3_tyhmb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vvw3x"]
 
@@ -31,11 +30,5 @@ unique_name_in_owner = true
 script = ExtResource("1_4wjmn")
 velocity_component = NodePath("../VelocityComponent")
 metadata/_custom_type_script = "uid://crubfkko2d2yu"
-
-[node name="ImpactTriggerComponent" type="Node" parent="." unique_id=352876365 node_paths=PackedStringArray("physics_body")]
-script = ExtResource("3_tyhmb")
-physics_body = NodePath("..")
-impulse_threshold = 5.0
-metadata/_custom_type_script = "uid://creun7xebihdo"
 
 [connection signal="body_entered" from="." to="KnockbackComponent" method="force_based_knockback"]
