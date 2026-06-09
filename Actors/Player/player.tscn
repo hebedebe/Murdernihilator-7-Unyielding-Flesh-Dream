@@ -17,10 +17,12 @@
 [ext_resource type="ArrayMesh" uid="uid://de8xutbpgdhla" path="res://Models/Meshes/Gun/Handle.res" id="8_4k5fm"]
 [ext_resource type="Script" uid="uid://dgdrhakp1liet" path="res://Components/LookComponent/look_component.gd" id="8_awv0x"]
 [ext_resource type="Texture2D" uid="uid://cth5jp30xtmvt" path="res://Textures/UI/BulletIcon.png" id="8_gnrir"]
+[ext_resource type="Texture2D" uid="uid://g5an64r534m7" path="res://Textures/Animations/MuzzleFlash.png" id="9_2smj8"]
 [ext_resource type="Script" uid="uid://bfu8ya1536p7k" path="res://Components/MeleeComponent/melee_component.gd" id="9_pnakb"]
 [ext_resource type="AudioStream" uid="uid://ceyfsoc84q7ml" path="res://Sounds/FX/kick_landed.mp3" id="10_g1lo4"]
 [ext_resource type="AudioStream" uid="uid://cogj3y1t6ncpb" path="res://Sounds/FX/whiff.mp3" id="11_sciwa"]
 [ext_resource type="Script" uid="uid://gbk2vvaygyhp" path="res://Components/ValueDisplayComponent/value_display_component.gd" id="11_w553y"]
+[ext_resource type="Texture2D" uid="uid://c1hujxrqxnyo6" path="res://Textures/UI/Crosshair.png" id="12_e2ks3"]
 [ext_resource type="Script" uid="uid://ueemsl00luuh" path="res://Components/DragComponent/drag_component.gd" id="12_w553y"]
 [ext_resource type="Script" uid="uid://dkyqu0lchg05q" path="res://Components/HitstopComponent/hitstop_component.gd" id="12_woyfc"]
 [ext_resource type="Script" uid="uid://brac14pbjcc15" path="res://Components/JumpComponent/jump_component.gd" id="13_wmrsf"]
@@ -53,6 +55,37 @@ func _process(delta: float) -> void:
 	global_velocity.y) * VEL_STR, -MAX_ROT, MAX_ROT), 5* delta)
 	
 	position.y = 0.015 * global_velocity.length() * sin(0.017 * Time.get_ticks_msec());
+"
+
+[sub_resource type="GDScript" id="GDScript_e2ks3"]
+script/source = "extends Node3D
+
+@export var rotation_amount: float = 0.5
+@export var return_strength: float = 15.0
+@export var position_offset: Vector3 = Vector3.ZERO
+
+@onready var player: Player = $\"../../..\"
+
+var target_position: Vector3 = Vector3.ZERO
+
+func _process(delta: float) -> void:
+	rotation = rotation.lerp(Vector3.ZERO, return_strength * delta)
+	target_position = target_position.lerp(position_offset, return_strength * delta)
+	position = position.lerp(target_position, return_strength * delta)
+	
+	var global_velocity = player.velocity * player.global_basis
+	
+	target_position = Vector3(
+		global_velocity.x,
+		-global_velocity.z,
+		global_velocity.y
+	) * 0.005
+	
+
+
+func _on_input_component_look_input(delta: Vector2) -> void:
+	rotation.y += delta.x * rotation_amount
+	rotation.x += delta.y * rotation_amount
 "
 
 [sub_resource type="GDScript" id="GDScript_rbp5l"]
@@ -108,6 +141,9 @@ script/source = "extends Node3D
 
 @onready var trail_source: Node3D = $\"../../../../../Camera3D/TrailSource\"
 @onready var camera_3d: Camera3D = $\"../../../../../Camera3D\"
+@onready var ray_cast_3d: RayCast3D = $\"../../../../../Camera3D/RayCast3D\"
+@onready var muzzle: Node3D = $Muzzle
+@onready var muzzle_flash: AnimatedSprite3D = $Muzzle/MuzzleFlash
 
 func _process(delta: float) -> void:
 	rotation = rotation.lerp(Vector3.ZERO, return_strength * delta)
@@ -116,15 +152,67 @@ func _process(delta: float) -> void:
 func fire():
 	rotation.x += 0.8
 	position.y -= 0.02
+	ray_cast_3d.force_raycast_update()
+	var endpoint: Vector3
+	if ray_cast_3d.is_colliding():
+		endpoint = ray_cast_3d.get_collision_point()
+	else:
+		endpoint = ray_cast_3d.to_global(ray_cast_3d.target_position + ray_cast_3d.position)
 	var draw: Draw3D = Draw3D.new()
 	add_child(draw)
 	draw.line(
 		trail_source.global_position, 
-		trail_source.global_position + camera_3d.global_basis.z * -50,
-		Color.AQUAMARINE,
-		2
+		endpoint,
+		Color.RED,
+		0.7
 	)
+	#muzzle_flash.position = muzzle.global_position
+	muzzle_flash.stop()
+	muzzle_flash.play(\"default\")
 "
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2ks3"]
+atlas = ExtResource("9_2smj8")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4k5fm"]
+atlas = ExtResource("9_2smj8")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_io41c"]
+atlas = ExtResource("9_2smj8")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47o75"]
+atlas = ExtResource("9_2smj8")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2smj8"]
+atlas = ExtResource("9_2smj8")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_orm4a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e2ks3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4k5fm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_io41c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47o75")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2smj8")
+}],
+"loop": false,
+"name": &"default",
+"speed": 16.0
+}]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pnakb"]
 size = Vector3(1, 1.63, 1.5698242)
@@ -167,6 +255,28 @@ shader_parameter/fg_color = Color(0, 1, 0, 1)
 shader_parameter/invert = false
 shader_parameter/intensity = 1.0
 
+[sub_resource type="GDScript" id="GDScript_4k5fm"]
+script/source = "extends TextureRect
+
+@onready var ray_cast_3d: RayCast3D = $\"../../Neck/Camera3D/RayCast3D\"
+@onready var camera_3d: Camera3D = $\"../../Neck/Camera3D\"
+@onready var hud: CanvasLayer = $\"..\"
+
+var target_location: Vector2 = Vector2.ZERO
+
+func _process(delta: float) -> void:
+	ray_cast_3d.force_raycast_update()
+	var collision_point
+	if ray_cast_3d.is_colliding():
+		collision_point = ray_cast_3d.get_collision_point()
+	else:
+		collision_point = ray_cast_3d.to_global(ray_cast_3d.target_position + ray_cast_3d.position)
+		
+	var screen_location = camera_3d.unproject_position(collision_point)
+	target_location = screen_location
+	position = position.lerp(target_location, 1)
+"
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_a4xvd"]
 viewport_path = NodePath("Neck/SubViewport2")
 
@@ -203,6 +313,12 @@ MAX_ROT = 1.5
 [node name="TrailSource" type="Node3D" parent="Neck/Camera3D" unique_id=22886281]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12786594, -0.02382958, -0.2570017)
 
+[node name="RayCast3D" type="RayCast3D" parent="Neck/Camera3D" unique_id=459990015]
+enabled = false
+target_position = Vector3(0, 0, -50)
+script = SubResource("GDScript_e2ks3")
+position_offset = Vector3(0, -1, 0)
+
 [node name="SubViewport" type="SubViewport" parent="Neck" unique_id=1383387172]
 transparent_bg = true
 size = Vector2i(960, 540)
@@ -213,6 +329,7 @@ cull_mask = 1047554
 
 [node name="MaskRoot" type="Node3D" parent="Neck/SubViewport/MaskCamera" unique_id=1874187275]
 script = SubResource("GDScript_rbp5l")
+rotation_amount = 0.2
 return_strength = 20.0
 
 [node name="Mask" type="Sprite3D" parent="Neck/SubViewport/MaskCamera/MaskRoot" unique_id=1050997382]
@@ -265,6 +382,19 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 7.450581e-09, 0, -7.450581e-09, 
 layers = 4
 mesh = ExtResource("8_4k5fm")
 
+[node name="Muzzle" type="Node3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun" unique_id=1003612625]
+transform = Transform3D(0.9999999, 0, 0, 0, -6.7055225e-08, 0.9999997, 0, -0.9999997, -6.7055225e-08, 0, 0.009686077, 0.0029991185)
+
+[node name="MuzzleFlash" type="AnimatedSprite3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun/Muzzle" unique_id=486592931]
+transform = Transform3D(46.009995, 0, 0, 0, -45.834904, 4.010034, 0, -4.010034, -45.834904, 0.615, -0.0686941, -1.341934)
+top_level = true
+layers = 4
+pixel_size = 0.0003
+billboard = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_orm4a")
+frame_progress = 0.3996441
+
 [node name="SpotLight3D" type="SpotLight3D" parent="Neck/SubViewport2/GunCamera/GunRoot" unique_id=1297182313]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.20291162, 2.3192883)
 layers = 4
@@ -315,6 +445,23 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="Crosshair" type="TextureRect" parent="HUD" unique_id=1600945746]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+pivot_offset = Vector2(40, 40)
+texture = ExtResource("12_e2ks3")
+script = SubResource("GDScript_4k5fm")
+
 [node name="GunOverlay" type="TextureRect" parent="HUD" unique_id=1611967719]
 anchors_preset = 15
 anchor_right = 1.0
@@ -333,17 +480,14 @@ texture = SubResource("ViewportTexture_rbp5l")
 
 [node name="Ammo" type="TextureRect" parent="HUD" unique_id=1108897943]
 modulate = Color(0.62116605, 0.69458, 0.7561646, 1)
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -251.0
 offset_top = -251.0
-grow_horizontal = 0
+offset_right = 251.0
 grow_vertical = 0
 scale = Vector2(1.26, 1.26)
-pivot_offset = Vector2(251, 251)
+pivot_offset = Vector2(0, 251)
 texture = ExtResource("7_slsra")
 
 [node name="Bullets" type="Control" parent="HUD/Ammo" unique_id=463033339]
@@ -484,6 +628,7 @@ metadata/_custom_type_script = "uid://dwwrt2e38os3s"
 [connection signal="look_input" from="InputComponent" to="Neck/SubViewport/MaskCamera/MaskRoot" method="_on_input_component_look_input"]
 [connection signal="look_input" from="InputComponent" to="LookComponent" method="on_look_input"]
 [connection signal="look_input" from="InputComponent" to="Neck/SubViewport2/GunCamera/GunRoot/GunOffset" method="_on_input_component_look_input"]
+[connection signal="look_input" from="InputComponent" to="Neck/Camera3D/RayCast3D" method="_on_input_component_look_input"]
 [connection signal="move_direction_changed" from="InputComponent" to="MovementComponent" method="on_move_direction_changed"]
 [connection signal="attack_landed" from="MeleeComponent" to="MeleeComponent/KickLanded" method="play"]
 [connection signal="attack_landed" from="MeleeComponent" to="MeleeComponent/HitstopComponent" method="hitstop"]
