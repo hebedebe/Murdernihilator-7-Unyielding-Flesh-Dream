@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://7153p8bqkc60"]
+
+[ext_resource type="Shader" uid="uid://dtx153qfqoenr" path="res://Shaders/Spatial/frutiger.gdshader" id="1_igxml"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_igxml")
+shader_parameter/mesh_height = 1.0
+shader_parameter/mesh_offset = 0.0
+shader_parameter/fresnel_power = 1.0
+shader_parameter/primary_color = Color(1, 0.7161644, 0.445064, 1)
+shader_parameter/secondary_color = Color(0.8312987, 0.5004714, 5.7756904e-07, 1)
+shader_parameter/highlight_color = Color(1, 1, 1, 1)
+shader_parameter/highlight_power = 1.5
+shader_parameter/lowlight_power = 2.0

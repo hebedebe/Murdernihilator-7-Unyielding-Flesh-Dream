@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://yoqnltgfqtqy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_odeq8"]
+albedo_color = Color(0.34763953, 0.6190024, 0, 1)
+metallic_specular = 1.0
+roughness = 0.29
+rim = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_odeq8"]
+radius = 0.1
+height = 0.2
+radial_segments = 6
+rings = 3
+
+[sub_resource type="Curve" id="Curve_odeq8"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_17ys4"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, -1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="HitParticles" type="CPUParticles3D" unique_id=2143564144]
+material_override = SubResource("StandardMaterial3D_odeq8")
+emitting = false
+amount = 16
+lifetime = 0.37
+one_shot = true
+explosiveness = 0.9
+randomness = 1.0
+mesh = SubResource("SphereMesh_odeq8")
+direction = Vector3(1, 1, 1)
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 3.0
+angular_velocity_min = -1.0
+angular_velocity_max = 1.0
+scale_amount_curve = SubResource("Curve_odeq8")
+color = Color(1, 0, 0, 1)
+hue_variation_max = 1.0
+hue_variation_curve = SubResource("Curve_17ys4")

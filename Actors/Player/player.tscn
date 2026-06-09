@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://t4s3ngqk0pbd" path="res://Components/MovementComponent/movement_component.gd" id="4_b63gh"]
 [ext_resource type="ArrayMesh" uid="uid://cdibtllpplkl" path="res://Models/Meshes/Gun/Barrel.res" id="5_a4xvd"]
 [ext_resource type="Texture2D" uid="uid://bwd6xerl4w5ae" path="res://Textures/UI/Overlays/mask.png" id="5_bsr8u"]
+[ext_resource type="Material" uid="uid://oeuksxub16w2" path="res://Textures/Spatial/green.tres" id="5_io41c"]
 [ext_resource type="ArrayMesh" uid="uid://c045dgvkhkrx3" path="res://Models/Meshes/Gun/Bullets.res" id="6_2smj8"]
 [ext_resource type="Script" uid="uid://cku1vco2vkbfg" path="res://Components/VelocityComponent/velocity_component.gd" id="6_isd1h"]
 [ext_resource type="Script" uid="uid://crubfkko2d2yu" path="res://Components/KnockbackComponent/knockback_component.gd" id="7_8gtf5"]
@@ -164,18 +165,22 @@ func fire():
 		endpoint = ray_cast_3d.get_collision_point()
 		var col = ray_cast_3d.get_collider()
 		if col is Dummy:
+			var particle = preload(\"res://FX/Particles/Hit/alien_hit_particles.tscn\").instantiate()
+			col.add_child(particle)
+			particle.global_position = endpoint
+			particle.restart()
 			(col.get_node(\"%KnockbackComponent\") as KnockbackComponent).knockback(10, ray_cast_3d.global_basis)
 			#(%MeleeComponent/HitstopComponent as HitstopComponent).hitstop()
 	else:
 		endpoint = ray_cast_3d.to_global(ray_cast_3d.target_position + ray_cast_3d.position)
-	var draw: Draw3D = Draw3D.new()
-	add_child(draw)
-	draw.line(
-		trail_source.global_position, 
-		endpoint,
-		Color.RED,
-		0.7
-	)
+	#var draw: Draw3D = Draw3D.new()
+	#add_child(draw)
+	#draw.line(
+		#trail_source.global_position, 
+		#endpoint,
+		#Color.RED,
+		#0.7
+	#)
 	#muzzle_flash.position = muzzle.global_position
 	muzzle_flash.stop()
 	muzzle_flash.play(\"default\")
@@ -342,6 +347,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 cull_mask = 1047554
 
 [node name="MaskRoot" type="Node3D" parent="Neck/SubViewport/MaskCamera" unique_id=1874187275]
+visible = false
 script = SubResource("GDScript_rbp5l")
 rotation_amount = 0.2
 return_strength = 20.0
@@ -379,24 +385,28 @@ script = SubResource("GDScript_2smj8")
 [node name="Barrel" type="MeshInstance3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun" unique_id=1192151358]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 7.450581e-09, 0, -7.450581e-09, 1, 0, 0, 0)
 layers = 4
+material_override = ExtResource("5_io41c")
 cast_shadow = 0
 mesh = ExtResource("5_a4xvd")
 
 [node name="Bullets" type="MeshInstance3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun" unique_id=1270568487]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 7.450581e-09, 0, -7.450581e-09, 1, 0, 0, 0)
 layers = 4
+material_override = ExtResource("5_io41c")
 cast_shadow = 0
 mesh = ExtResource("6_2smj8")
 
 [node name="Handle" type="MeshInstance3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun" unique_id=83724276]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 7.450581e-09, 0, -7.450581e-09, 1, 0, 0, 0)
 layers = 4
+material_override = ExtResource("5_io41c")
 cast_shadow = 0
 mesh = ExtResource("7_e2ks3")
 
 [node name="Trigger" type="MeshInstance3D" parent="Neck/SubViewport2/GunCamera/GunRoot/GunOffset/Gun" unique_id=37339757]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 7.450581e-09, 0, -7.450581e-09, 1, 0, 0, 0)
 layers = 4
+material_override = ExtResource("5_io41c")
 cast_shadow = 0
 mesh = ExtResource("8_4k5fm")
 

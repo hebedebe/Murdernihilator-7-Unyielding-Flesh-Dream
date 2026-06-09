@@ -8,6 +8,7 @@
 [ext_resource type="ArrayMesh" uid="uid://dhssapjvomidu" path="res://Models/Meshes/TestMap/Floors.res" id="3_aw2rw"]
 [ext_resource type="ArrayMesh" uid="uid://csvtt4a840ik5" path="res://Models/Meshes/TestMap/Walls.res" id="4_2k5y1"]
 [ext_resource type="Material" uid="uid://50ntbonbl5mg" path="res://Materials/Spatial/dummy.tres" id="4_aw2rw"]
+[ext_resource type="Material" uid="uid://7153p8bqkc60" path="res://Textures/Spatial/orange.tres" id="6_2k5y1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s4e7g"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -66,7 +67,8 @@ mesh = ExtResource("4_2k5y1")
 shape = SubResource("ConcavePolygonShape3D_8n7cj")
 
 [node name="Ceilings" type="MeshInstance3D" parent="." unique_id=1301713470]
-transform = Transform3D(400, 0, 0, 0, -1.7484555e-05, 400, 0, -400, -1.7484555e-05, 0, -3.4038901, 13.924532)
+transform = Transform3D(400, 0, 0, 0, -1.7484555e-05, 400, 0, -400, -1.7484555e-05, -0.3239069, -3.597181, 13.502613)
+material_override = ExtResource("6_2k5y1")
 mesh = ExtResource("2_f0ito")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Ceilings" unique_id=1455820943]
@@ -83,3 +85,18 @@ mesh = ExtResource("3_aw2rw")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floors/StaticBody3D" unique_id=65194475]
 shape = SubResource("ConcavePolygonShape3D_aw2rw")
+
+[node name="Dummy2" parent="." unique_id=40049102 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3215877, -3.2537413, 7.6580534)
+
+[node name="Dummy3" parent="." unique_id=619766517 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.457586, -3.2537405, 12.491175)
+
+[node name="Dummy4" parent="." unique_id=1303897194 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.36329627, -3.2537403, 15.750904)
+
+[node name="Dummy5" parent="." unique_id=644924162 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45286202, -3.2537405, 13.890822)
+
+[node name="Dummy6" parent="." unique_id=848831819 instance=ExtResource("2_i278h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.59118295, -3.2537403, 11.655166)
