@@ -41,14 +41,14 @@ size = Vector3(0.565, 0.095, 0.625)
 [sub_resource type="GDScript" id="GDScript_cwpch"]
 script/source = "extends Camera3D
 
-const MAX_ROT: float = 3
-const VEL_STR: float = 0.01
+@export var MAX_ROT: float = 3
+@export var VEL_STR: float = 0.01
 
 @onready var player: Player = $\"../..\"
 
 func _process(delta: float) -> void:
 	var global_velocity = player.velocity * player.global_basis
-	rotation.z = lerp(rotation.y, clamp(-global_velocity.x * VEL_STR, -MAX_ROT, MAX_ROT), 5 * delta)
+	rotation.z = lerp(rotation.z, clamp(-global_velocity.x * VEL_STR, -MAX_ROT, MAX_ROT), 5 * delta)
 	rotation.x = lerp(rotation.x, clamp((global_velocity.z + 
 	global_velocity.y) * VEL_STR, -MAX_ROT, MAX_ROT), 5* delta)
 	
@@ -106,6 +106,9 @@ script/source = "extends Node3D
 @export var rotation_amount: float = 0.5
 @export var return_strength: float = 15.0
 
+@onready var trail_source: Node3D = $\"../../../../../Camera3D/TrailSource\"
+@onready var camera_3d: Camera3D = $\"../../../../../Camera3D\"
+
 func _process(delta: float) -> void:
 	rotation = rotation.lerp(Vector3.ZERO, return_strength * delta)
 	position = position.lerp(Vector3.ZERO, return_strength * delta)
@@ -113,6 +116,14 @@ func _process(delta: float) -> void:
 func fire():
 	rotation.x += 0.8
 	position.y -= 0.02
+	var draw: Draw3D = Draw3D.new()
+	add_child(draw)
+	draw.line(
+		trail_source.global_position, 
+		trail_source.global_position + camera_3d.global_basis.z * -50,
+		Color.AQUAMARINE,
+		2
+	)
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pnakb"]
@@ -187,6 +198,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 [node name="Camera3D" type="Camera3D" parent="Neck" unique_id=1404921878]
 cull_mask = 1047553
 script = SubResource("GDScript_cwpch")
+MAX_ROT = 1.5
+
+[node name="TrailSource" type="Node3D" parent="Neck/Camera3D" unique_id=22886281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12786594, -0.02382958, -0.2570017)
 
 [node name="SubViewport" type="SubViewport" parent="Neck" unique_id=1383387172]
 transparent_bg = true
@@ -214,6 +229,7 @@ mesh = ExtResource("3_bsr8u")
 
 [node name="SubViewport2" type="SubViewport" parent="Neck" unique_id=143229666]
 transparent_bg = true
+anisotropic_filtering_level = 0
 size = Vector2i(640, 360)
 
 [node name="GunCamera" type="Camera3D" parent="Neck/SubViewport2" unique_id=1450475930]
@@ -326,6 +342,8 @@ offset_left = -251.0
 offset_top = -251.0
 grow_horizontal = 0
 grow_vertical = 0
+scale = Vector2(1.26, 1.26)
+pivot_offset = Vector2(251, 251)
 texture = ExtResource("7_slsra")
 
 [node name="Bullets" type="Control" parent="HUD/Ammo" unique_id=463033339]
