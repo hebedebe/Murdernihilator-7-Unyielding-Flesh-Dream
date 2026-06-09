@@ -3,6 +3,7 @@ class_name InputComponent extends Node
 signal move_direction_changed(direction: Vector2)
 signal jump_requested
 signal kick_requested
+signal fire
 signal look_input(delta: Vector2) # Radians
 
 @export var mouse_sensitivity: float = 0.3
@@ -26,6 +27,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		
+	if event.is_action_pressed("fire"):
+		fire.emit()
 
 func _physics_process(_delta: float) -> void:
 	var direction : Vector2 = Input.get_vector(

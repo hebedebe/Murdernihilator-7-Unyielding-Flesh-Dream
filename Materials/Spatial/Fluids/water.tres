@@ -1,0 +1,15 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b4d8elh30qvij"]
+
+[ext_resource type="Shader" uid="uid://bgnismynttlt" path="res://Shaders/Spatial/fluid.gdshader" id="1_fedg5"]
+[ext_resource type="Texture2D" uid="uid://bfuc75vksboxv" path="res://Textures/Spatial/WaterLowRes.png" id="2_fedg5"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_fedg5")
+shader_parameter/albedo_texture = ExtResource("2_fedg5")
+shader_parameter/warp_speed = 1.0
+shader_parameter/warp_intensity = 0.12
+shader_parameter/warp_closeness = 2.0
+shader_parameter/flow_dir = Vector2(1, 0)
+shader_parameter/flow_speed = 0.0
+shader_parameter/uv_scale = 30.0

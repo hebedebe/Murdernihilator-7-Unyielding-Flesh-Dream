@@ -2,7 +2,7 @@
 
 [ext_resource type="Material" uid="uid://b65ox4e561f3o" path="res://Materials/Spatial/tiles.tres" id="1_qypf0"]
 [ext_resource type="PackedScene" uid="uid://bcvq8duyqbfwm" path="res://Actors/Player/player.tscn" id="1_s4e7g"]
-[ext_resource type="Material" uid="uid://bufmq77y7r76p" path="res://Materials/Spatial/Fluids/goo.tres" id="1_ssabd"]
+[ext_resource type="Material" uid="uid://b4d8elh30qvij" path="res://Materials/Spatial/Fluids/water.tres" id="2_8n7cj"]
 [ext_resource type="PackedScene" uid="uid://dame871bpsowo" path="res://Actors/Dummy/dummy.tscn" id="2_i278h"]
 [ext_resource type="Script" uid="uid://b0bud44dkd53e" path="res://Components/ExecuteOnAreaContentsComponent/execute_on_area_contents_component.gd" id="3_8n7cj"]
 [ext_resource type="Script" uid="uid://if3cjb2cpbnu" path="res://Components/ApplyForceComponent/apply_force_component.gd" id="4_f0ito"]
@@ -17,7 +17,6 @@ sky_material = SubResource("ProceduralSkyMaterial_s4e7g")
 [sub_resource type="Environment" id="Environment_ssabd"]
 background_mode = 2
 sky = SubResource("Sky_i278h")
-tonemap_mode = 3
 ssao_enabled = true
 glow_enabled = true
 fog_enabled = true
@@ -47,7 +46,7 @@ material = ExtResource("1_qypf0")
 [node name="Fluid" type="CSGBox3D" parent="." unique_id=113405963]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -38.527443, 0)
 size = Vector3(100, 76.36084, 100)
-material = ExtResource("1_ssabd")
+material = ExtResource("2_8n7cj")
 
 [node name="ExecuteOnAreaContentsComponent" type="Node" parent="Fluid" unique_id=2115708856 node_paths=PackedStringArray("area_3d")]
 script = ExtResource("3_8n7cj")
