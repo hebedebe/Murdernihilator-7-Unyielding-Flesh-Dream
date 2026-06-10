@@ -157,6 +157,7 @@ func fire():
 	
 	%Ammo.fire()
 	
+	
 	rotation.x += 0.8
 	position.y -= 0.02
 	ray_cast_3d.force_raycast_update()
@@ -170,7 +171,6 @@ func fire():
 			particle.global_position = endpoint
 			particle.restart()
 			(col.get_node(\"%KnockbackComponent\") as KnockbackComponent).knockback(10, ray_cast_3d.global_basis)
-			#(%MeleeComponent/HitstopComponent as HitstopComponent).hitstop()
 	else:
 		endpoint = ray_cast_3d.to_global(ray_cast_3d.target_position + ray_cast_3d.position)
 	#var draw: Draw3D = Draw3D.new()
@@ -185,6 +185,9 @@ func fire():
 	muzzle_flash.stop()
 	muzzle_flash.play(\"default\")
 	
+	var tween = create_tween()
+	tween.tween_property(camera_3d, \"rotation\", camera_3d.rotation + Vector3(PI/24, 0, 0), 0.05)
+	tween.play()
 
 func reload():
 	rotation.x += 2*PI
@@ -336,7 +339,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12786594, -0.02382958, -0.2
 enabled = false
 target_position = Vector3(0, 0, -50)
 script = SubResource("GDScript_e2ks3")
-position_offset = Vector3(0, -1, 0)
 
 [node name="SubViewport" type="SubViewport" parent="Neck" unique_id=1383387172]
 transparent_bg = true
@@ -347,7 +349,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6274803, 0)
 cull_mask = 1047554
 
 [node name="MaskRoot" type="Node3D" parent="Neck/SubViewport/MaskCamera" unique_id=1874187275]
-visible = false
 script = SubResource("GDScript_rbp5l")
 rotation_amount = 0.2
 return_strength = 20.0
@@ -602,6 +603,7 @@ metadata/_custom_type_script = "uid://ogke4tceyk7h"
 [node name="InputComponent" type="Node" parent="." unique_id=502195633]
 unique_name_in_owner = true
 script = ExtResource("2_5ni5v")
+mouse_sensitivity = 0.15
 metadata/_custom_type_script = "uid://bkneh17a21syg"
 
 [node name="MeleeComponent" type="Node" parent="." unique_id=177339956 node_paths=PackedStringArray("melee_area", "knockback_direction_pointer", "ignored_bodies")]

@@ -3,7 +3,7 @@ class_name Ammo
 
 @export var max_ammo: int = 5
 
-@onready var bullets: Control = $Bullets
+@onready var bullet_container: Control = $Bullets
 
 var target_rotation: float
 var rotation_velocity: float
@@ -11,7 +11,7 @@ var rotation_velocity: float
 var ammo: int = 5 :
 	set(value):
 		ammo = value
-		var bullets = bullets.get_children()
+		var bullets = bullet_container.get_children()
 		for i in range(bullets.size()):
 			(bullets[i] as TextureRect).visible = !(ammo <= i)
 

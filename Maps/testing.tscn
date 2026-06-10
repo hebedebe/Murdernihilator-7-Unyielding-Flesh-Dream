@@ -67,7 +67,7 @@ mesh = ExtResource("4_2k5y1")
 shape = SubResource("ConcavePolygonShape3D_8n7cj")
 
 [node name="Ceilings" type="MeshInstance3D" parent="." unique_id=1301713470]
-transform = Transform3D(400, 0, 0, 0, -1.7484555e-05, 400, 0, -400, -1.7484555e-05, -0.3239069, -3.597181, 13.502613)
+transform = Transform3D(400, 0, 0, 0, -1.7484555e-05, 400, 0, -400, -1.7484555e-05, 0, -3.4038901, 13.924532)
 material_override = ExtResource("6_2k5y1")
 mesh = ExtResource("2_f0ito")
 

@@ -19,7 +19,7 @@ func _ready() -> void:
 	assert(velocity_component, "Velocity component must be assigned")
 		
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Horizontal movement
 	var wish_dir := body.transform.basis * Vector3(move_direction.x, 0, move_direction.y)
 	velocity_component.velocity.x += wish_dir.x * acceleration
